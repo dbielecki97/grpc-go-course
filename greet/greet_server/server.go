@@ -6,6 +6,7 @@ import (
 	pb "github.com/dbielecki97/grpc-go-course/greet/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 	"io"
 	"log"
@@ -87,12 +88,23 @@ func (s server) GreetWithDeadline(ctx context.Context, r *pb.GreetWithDeadlineRe
 func main() {
 	fmt.Println("Hello world!")
 
+	var opts []grpc.ServerOption
+	tls := false
+	if tls {
+		certFile := "ssl/server.crt"
+		keyFile := "ssl/server.pem"
+		creds, sslErr := credentials.NewServerTLSFromFile(certFile, keyFile)
+		if sslErr != nil {
+			log.Fatalf("Failed loading certificates: %v", sslErr)
+		}
+		opts = append(opts, grpc.Creds(creds))
+	}
 	lis, err := net.Listen("tcp", "0.0.0.0:50051")
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	s := grpc.NewServer()
+	s := grpc.NewServer(opts...)
 	pb.RegisterGreetServiceServer(s, &server{})
 
 	if err := s.Serve(lis); err != nil {
