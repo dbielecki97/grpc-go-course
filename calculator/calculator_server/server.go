@@ -6,6 +6,7 @@ import (
 	pb "github.com/dbielecki97/grpc-go-course/calculator/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"io"
 	"log"
@@ -97,6 +98,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
+	reflection.Register(s)
 	pb.RegisterCalculatorServer(s, &server{})
 
 	if err = s.Serve(lis); err != nil {

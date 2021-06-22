@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"io"
 	"log"
@@ -105,6 +106,7 @@ func main() {
 	}
 
 	s := grpc.NewServer(opts...)
+	reflection.Register(s)
 	pb.RegisterGreetServiceServer(s, &server{})
 
 	if err := s.Serve(lis); err != nil {
