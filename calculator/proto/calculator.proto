@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package calculator;
+option go_package = "/calculator/proto";
+
+message SumRequest{
+  int32 a = 1;
+  int32 b = 2;
+}
+
+message SumResponse{
+  int32 sum = 1;
+}
+
+message DecomposeRequest{
+  int32 number = 1;
+}
+
+message DecomposeResponse{
+  int32 number = 1;
+}
+
+message ComputeAverageRequest{
+  int32 number = 1;
+}
+
+message ComputeAverageResponse{
+  float average = 1;
+}
+
+
+message FindMaximumRequest{
+  int32 number = 1;
+}
+
+message FindMaximumResponse{
+  int32 maximum = 1;
+}
+
+message SquareRootRequest{
+  int32 number = 1;
+}
+
+message SquareRootResponse{
+  double number_root = 1;
+}
+
+
+service Calculator{
+  rpc Sum(SumRequest) returns(SumResponse) {};
+  rpc Decompose(DecomposeRequest) returns(stream DecomposeResponse) {};
+  rpc ComputeAverage(stream ComputeAverageRequest) returns(ComputeAverageResponse) {};
+  rpc FindMaximum(stream FindMaximumRequest) returns(stream FindMaximumResponse) {};
+  rpc SquareRoot(SquareRootRequest) returns (SquareRootResponse) {};
+}
